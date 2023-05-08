@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import CharField, F, Value, Case, When
 
 
 class State(models.Model):
@@ -25,6 +26,7 @@ class Lga(models.Model):
     user_ip_address = models.CharField(max_length=50)
 
     class Meta:
+        managed = False
         db_table = 'lga'
         
     def __str__(self):
@@ -44,6 +46,7 @@ class Ward(models.Model):
     user_ip_address = models.CharField(max_length=50)
 
     class Meta:
+        managed = False
         db_table = 'ward'
         
     def __str__(self):
@@ -67,6 +70,7 @@ class PollingUnit(models.Model):
     user_ip_address = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
+        managed = False
         ordering = ('-name',)
         db_table = 'polling_unit'
         
@@ -76,28 +80,29 @@ class PollingUnit(models.Model):
 
 class Party(models.Model):
     partyid = models.CharField(max_length=11)
-    name = models.CharField(db_column='partyname', max_length=11)
+    name = models.CharField(db_column='partyname', unique=True, max_length=11)
 
     class Meta:
+        managed = False
         db_table = 'party'
         
     def __str__(self):
         return self.name
 
 
-class Agentname(models.Model):
-    name_id = models.AutoField(primary_key=True)
-    firstname = models.CharField(max_length=255)
-    lastname = models.CharField(max_length=255)
-    email = models.CharField(max_length=255, blank=True, null=True)
-    phone = models.CharField(max_length=13)
-    pollingunit_uniqueid = models.IntegerField()
+
+class AnnouncedPollingUnitResult(models.Model):
+    result_id = models.AutoField(primary_key=True)
+    polling_unit = models.ForeignKey(PollingUnit, related_name='results', null=True, on_delete=models.SET_NULL, db_column='polling_unit_uniqueid')
+    party = models.ForeignKey(Party, on_delete=models.CASCADE, to_field='name', db_column='party_abbreviation')
+    party_score = models.IntegerField()
+    entered_by_user = models.CharField(max_length=50)
+    date_entered = models.DateTimeField(auto_now_add=True)
+    user_ip_address = models.CharField(max_length=50)
 
     class Meta:
-        db_table = 'agentname'
-        
-    def __str__(self):
-        return self.firstname + ' ' + self.lastname
+        managed = False
+        db_table = 'announced_pu_results'
 
 
 class AnnouncedLgaResult(models.Model):
@@ -112,20 +117,6 @@ class AnnouncedLgaResult(models.Model):
     class Meta:
         managed = False
         db_table = 'announced_lga_results'
-
-
-class AnnouncedPollingUnitResult(models.Model):
-    result_id = models.AutoField(primary_key=True)
-    polling_unit = models.ForeignKey(PollingUnit, related_name='results', null=True, on_delete=models.SET_NULL, db_column='polling_unit_uniqueid')
-    party_abbreviation = models.CharField(max_length=4)
-    party_score = models.IntegerField()
-    entered_by_user = models.CharField(max_length=50)
-    date_entered = models.DateTimeField()
-    user_ip_address = models.CharField(max_length=50)
-
-    class Meta:
-        db_table = 'announced_pu_results'
-
 
 class AnnouncedStateResult(models.Model):
     result_id = models.AutoField(primary_key=True)
