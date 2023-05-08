@@ -25,7 +25,6 @@ class Lga(models.Model):
     user_ip_address = models.CharField(max_length=50)
 
     class Meta:
-        managed = False
         db_table = 'lga'
         
     def __str__(self):
@@ -45,7 +44,6 @@ class Ward(models.Model):
     user_ip_address = models.CharField(max_length=50)
 
     class Meta:
-        managed = False
         db_table = 'ward'
         
     def __str__(self):
@@ -69,7 +67,6 @@ class PollingUnit(models.Model):
     user_ip_address = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
-        managed = False
         ordering = ('-name',)
         db_table = 'polling_unit'
         
@@ -82,7 +79,6 @@ class Party(models.Model):
     name = models.CharField(db_column='partyname', max_length=11)
 
     class Meta:
-        managed = False
         db_table = 'party'
         
     def __str__(self):
@@ -98,7 +94,6 @@ class Agentname(models.Model):
     pollingunit_uniqueid = models.IntegerField()
 
     class Meta:
-        managed = False
         db_table = 'agentname'
         
     def __str__(self):
@@ -119,9 +114,9 @@ class AnnouncedLgaResult(models.Model):
         db_table = 'announced_lga_results'
 
 
-class AnnouncedPuResult(models.Model):
+class AnnouncedPollingUnitResult(models.Model):
     result_id = models.AutoField(primary_key=True)
-    polling_unit_uniqueid = models.CharField(max_length=50)
+    polling_unit = models.ForeignKey(PollingUnit, related_name='results', null=True, on_delete=models.SET_NULL, db_column='polling_unit_uniqueid')
     party_abbreviation = models.CharField(max_length=4)
     party_score = models.IntegerField()
     entered_by_user = models.CharField(max_length=50)
@@ -129,7 +124,6 @@ class AnnouncedPuResult(models.Model):
     user_ip_address = models.CharField(max_length=50)
 
     class Meta:
-        managed = False
         db_table = 'announced_pu_results'
 
 
