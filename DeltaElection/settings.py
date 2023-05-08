@@ -90,7 +90,7 @@ DATABASES = {
         'NAME': 'bincom_test',
         'USER': 'root',
         'PASSWORD': env.str('DB_PASSWORD'),
-        'HOST': 'railway_mysql',
+        'HOST': env.str('MYSQLHOST'),
         'PORT': '3306',
     }
 }
