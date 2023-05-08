@@ -10,9 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-from environs import Env
+import os
+import sys
 from pathlib import Path
 
+from django.db import connection
+from environs import Env
 
 env = Env()
 env.read_env()
@@ -30,7 +33,7 @@ SECRET_KEY = 'django-insecure-5b&iibq-bo@6wrpfd*b5%0@$g97j90c&xfnace63o0+!303-=c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.railway.ap']
 
 
 # Application definition
@@ -87,7 +90,7 @@ DATABASES = {
         'NAME': 'bincom_test',
         'USER': 'root',
         'PASSWORD': env.str('DB_PASSWORD'),
-        'HOST': '127.0.0.1',
+        'HOST': 'railway_mysql',
         'PORT': '3306',
     }
 }
@@ -133,3 +136,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+if 'runserver' not in sys.argv:
+    with open('mysql-docker/bincom_test.sql', 'r') as f:
+        with connection.cursor() as cursor:
+            cursor.execute(f.read())
