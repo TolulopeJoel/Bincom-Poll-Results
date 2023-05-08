@@ -1,6 +1,6 @@
 asgiref==3.6.0
 certifi==2022.12.7
-Django==4.2pip
+Django==4.2
 environs==9.5.0
 gunicorn==20.1.0
 marshmallow==3.19.0
