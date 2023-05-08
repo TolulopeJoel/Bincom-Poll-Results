@@ -1,0 +1,17 @@
+{% extends 'main.html' %}
+
+{% block body %}
+
+<div class="container">
+    <h1 class="my-5">Add Result</h1>
+    <form method="post" class="form">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form }}
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg">Add Result</button>
+    </form>
+</div>
+
+
+{% endblock %}

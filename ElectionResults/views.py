@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.views import generic
+from django.urls import reverse_lazy
 
-from .forms import LGAForm
+from .forms import LGAForm, PollingUnitResultForm
 from .models import PollingUnit, AnnouncedPollingUnitResult, Lga
 
 
-class PollingUnitResultList(generic.ListView):
+class PollingUnitResultListView(generic.ListView):
     model = PollingUnit
     context_object_name = 'polling_units'
     template_name = 'ElectionResults/polling_unit_result_list.html'
@@ -52,3 +53,10 @@ def lga_total_results_view(request):
         return render(request, 'ElectionResults/lga_result.html', context)
 
     return render(request, 'ElectionResults/lga_result.html', {'form': form})
+
+
+class AddPollingUnitResultView(generic.CreateView):
+    model = AnnouncedPollingUnitResult
+    form_class = PollingUnitResultForm
+    template_name = 'ElectionResults/add_polling_unit_result.html'
+    success_url = reverse_lazy('polling_unit_results')
