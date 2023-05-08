@@ -1,0 +1,58 @@
+{% extends 'main.html' %}
+
+{% block body %}
+
+<div class="container">
+    <form method="post" class="form-inline">
+        {% csrf_token %}
+        <div class="form-group w-75">
+            {{ form.lga}}
+        </div>
+        <button type="submit" class="btn btn-primary mx-3">Submit</button>
+    </form>
+
+
+    <h1 class="my-5">Total Result for <i>{{ lga.name }}</i> </h1>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Polling Units</th>
+                <th scope="col">Results</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for polling_unit_name, polling_unit_result in unit_scores.items %}
+            <tr>
+                <td><i><b>{{ polling_unit_name }}</b></i></td>
+                <td>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Party</th>
+                                <th scope="col">Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in polling_unit_result %}
+                            <tr>
+                                <td>{{ result.party }}</td>
+                                <td>{{ result.score }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            {% endfor %}
+            <tr class="table-success">
+                <td><b>Total Results</b></td>
+                <td><b>{{ lga_total_score }}</b></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+{% endblock %}
