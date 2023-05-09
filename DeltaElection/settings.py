@@ -87,11 +87,11 @@ WSGI_APPLICATION = 'DeltaElection.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bincom_test',
-        'USER': 'root',
+        'NAME': env.str('DB_NAME'),
+        'USER': env.str('DB_USER'),
         'PASSWORD': env.str('DB_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'HOST': env.str('DB_HOST'),
+        'PORT': env.str('DB_PORT'),
     }
 }
 
@@ -136,9 +136,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-if 'runserver' not in sys.argv:
-    with open('mysql-docker/bincom_test.sql', 'r') as f:
-        with connection.cursor() as cursor:
-            cursor.execute(f.read())
